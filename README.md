@@ -26,8 +26,8 @@ Automação de infraestrutura para laboratório homelab — Kubernetes, serviço
 ### Etapa 1 — Instalar dependências no servidor
 
 ```bash
-# Via SSH no servidor:
-bash tools/install_k3d.sh
+curl -fsSL -H 'Cache-Control: no-cache' \
+  https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/tools/install_k3d.sh | bash
 ```
 
 Instala:
@@ -38,8 +38,8 @@ Instala:
 ### Etapa 2 — Criar o cluster
 
 ```bash
-# Via SSH no servidor:
-bash k3d/cluster.sh create
+curl -fsSL -H 'Cache-Control: no-cache' \
+  https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/cluster.sh | bash -s create
 ```
 
 Cria um cluster `homelab` com **1 server + 2 agents**, conforme `k3d/cluster.yaml`.

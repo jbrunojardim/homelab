@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG="$SCRIPT_DIR/cluster.yaml"
 CLUSTER_NAME="homelab"
+CLUSTER_YAML_URL="https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/cluster.yaml"
+CONFIG="$(mktemp /tmp/k3d-cluster.XXXXXX.yaml)"
+
+cleanup() { rm -f "$CONFIG"; }
+trap cleanup EXIT
 
 log() {
   local GREEN="\e[32m"
@@ -42,9 +45,12 @@ cmd_create() {
     return
   fi
 
+  log "Baixando cluster.yaml"
+  curl -fsSL -H 'Cache-Control: no-cache' "$CLUSTER_YAML_URL" -o "$CONFIG"
+
   SERVER_IP="$(get_server_ip)"
   log "IP detectado: $SERVER_IP"
-  log "Criando cluster '${CLUSTER_NAME}' com config: $CONFIG"
+  log "Criando cluster '${CLUSTER_NAME}'"
   k3d cluster create --config "$CONFIG" --k3s-arg "--tls-san=${SERVER_IP}@server:0"
 
   log "Cluster criado com sucesso!"
