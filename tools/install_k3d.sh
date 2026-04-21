@@ -39,17 +39,10 @@ else
 fi
 
 # ─── kubectl ──────────────────────────────────────────────────────────────────
-log "Instalando kubectl"
+log "Instalando kubectl (via dotstrap/tools/kubectl.sh)"
 
-if command -v kubectl >/dev/null 2>&1; then
-  log "kubectl já instalado: $(kubectl version --client --short 2>/dev/null || kubectl version --client)"
-else
-  KUBECTL_VERSION="$(curl -Ls https://dl.k8s.io/release/stable.txt)"
-  curl -LO "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
-  chmod +x kubectl
-  sudo mv kubectl /usr/local/bin/kubectl
-  log "kubectl instalado: $(kubectl version --client)"
-fi
+curl -fsSL -H 'Cache-Control: no-cache' \
+  https://raw.githubusercontent.com/jbrunojardim/dotstrap/refs/heads/joseph/tools/kubectl.sh | bash
 
 # ─── Conclusão ────────────────────────────────────────────────────────────────
 echo ""

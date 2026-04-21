@@ -9,25 +9,18 @@ Automação de infraestrutura para laboratório homelab — Kubernetes, serviço
 | Máquina | Modelo | SO | Função |
 |---|---|---|---|
 | Servidor | Samsung Galaxy Book 360 | Fedora Server | Nó do cluster k3d |
-| Principal | Lenovo ThinkPad T14 | Fedora 43 / Hyprland | Controle remoto via kubectl |
+| Desktop | Lenovo ThinkPad T14 | Fedora 43 / Hyprland | Controle remoto via kubectl |
 
 > O servidor foi configurado como headless via [dotstrap/bootstrap/headless.sh](https://github.com/jbrunojardim/dotstrap/blob/joseph/bootstrap/headless.sh).
 
 ---
 
-## k3d — Cluster Kubernetes local
+## Servidor (srvfed01)
 
-### Pré-requisitos (servidor)
-
-- Fedora Server instalado e configurado como headless
-- Acesso SSH funcionando
-- `dotstrap/bootstrap/headless.sh` executado (swap desabilitado, SELinux permissive, firewalld desabilitado)
-
-### Etapa 1 — Instalar dependências no servidor
+### Etapa 1 — Instalar dependências
 
 ```bash
-curl -fsSL -H 'Cache-Control: no-cache' \
-  https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/tools/install_k3d.sh | bash
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/tools/install_k3d.sh | bash
 ```
 
 Instala:
@@ -38,8 +31,7 @@ Instala:
 ### Etapa 2 — Criar o cluster
 
 ```bash
-curl -fsSL -H 'Cache-Control: no-cache' \
-  https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/cluster.sh | bash -s create
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/cluster.sh | bash -s create
 ```
 
 Cria um cluster `homelab` com **1 server + 2 agents**, conforme `k3d/cluster.yaml`.
@@ -57,13 +49,29 @@ Cria um cluster `homelab` com **1 server + 2 agents**, conforme `k3d/cluster.yam
 
 ---
 
+## Desktop (ThinkPad T14)
+
+### Etapa 3 — Configurar kubectl
+
+```bash
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/scripts/kubeconfig.sh | bash -s joseph@192.168.68.60
+```
+
+O script:
+- Busca o kubeconfig do servidor via SSH
+- Corrige o endereço para `IP:6443`
+- Mescla em `~/.kube/config`
+- Define `k3d-homelab` como contexto ativo
+- Valida com `kubectl get nodes`
+
+---
+
 ## Ciclo de vida do cluster
 
 ```bash
-bash k3d/cluster.sh create      # cria o cluster
-bash k3d/cluster.sh status      # nodes + pods do sistema
-bash k3d/cluster.sh kubeconfig  # exibe kubeconfig com IP da interface cabeada
-bash k3d/cluster.sh delete      # destrói o cluster
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/cluster.sh | bash -s create
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/cluster.sh | bash -s status
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/cluster.sh | bash -s delete
 ```
 
 ---
@@ -78,7 +86,7 @@ homelab/
 │   ├── cluster.sh        # create / delete / status / kubeconfig
 │   └── cluster.yaml      # configuração declarativa do cluster k3d
 └── scripts/
-    └── kubeconfig.sh     # (em evolução) configuração do kubectl no laptop principal
+    └── kubeconfig.sh     # configura kubectl no desktop via SSH
 ```
 
 ---
@@ -89,6 +97,7 @@ homelab/
 homelab/
 ├── tools/         # ← implementado
 ├── k3d/           # ← implementado
+├── scripts/       # ← implementado
 ├── manifests/     # yamls de aplicações
 ├── helm/          # charts e values
 └── terraform/     # infra-as-code
