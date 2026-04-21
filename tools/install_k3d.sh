@@ -26,7 +26,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 log "Instalando Docker Engine (via dotstrap/tools/docker.sh)"
 
 curl -fsSL -H 'Cache-Control: no-cache' \
-  https://raw.githubusercontent.com/jbrunojardim/dotfile-bootstrap/refs/heads/joseph/tools/docker.sh | bash
+  https://raw.githubusercontent.com/jbrunojardim/dotstrap/refs/heads/joseph/tools/docker.sh | bash
 
 # ─── k3d ──────────────────────────────────────────────────────────────────────
 log "Instalando k3d"

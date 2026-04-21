@@ -11,7 +11,7 @@ Automação de infraestrutura para laboratório homelab — Kubernetes, serviço
 | Servidor | Samsung Galaxy Book 360 | Fedora Server | Nó do cluster k3d |
 | Principal | Lenovo ThinkPad T14 | Fedora 43 / Hyprland | Controle remoto via kubectl |
 
-> O servidor foi configurado como headless via [dotstrap/bootstrap/headless.sh](https://github.com/jbrunojardim/dotfile-bootstrap/blob/joseph/bootstrap/headless.sh).
+> O servidor foi configurado como headless via [dotstrap/bootstrap/headless.sh](https://github.com/jbrunojardim/dotstrap/blob/joseph/bootstrap/headless.sh).
 
 ---
 
@@ -31,7 +31,7 @@ curl -fsSL -H 'Cache-Control: no-cache' \
 ```
 
 Instala:
-- Docker Engine (via [`dotstrap/tools/docker.sh`](https://github.com/jbrunojardim/dotfile-bootstrap/blob/joseph/tools/docker.sh))
+- Docker Engine (via [`dotstrap/tools/docker.sh`](https://github.com/jbrunojardim/dotstrap/blob/joseph/tools/docker.sh))
 - k3d (via script oficial)
 - kubectl (versão estável mais recente via `dl.k8s.io`)
 
