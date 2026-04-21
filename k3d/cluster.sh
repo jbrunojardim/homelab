@@ -53,6 +53,9 @@ cmd_create() {
   log "Criando cluster '${CLUSTER_NAME}'"
   k3d cluster create --config "$CONFIG" --k3s-arg "--tls-san=${SERVER_IP}@server:0"
 
+  log "Configurando kubeconfig local"
+  k3d kubeconfig merge "$CLUSTER_NAME" --kubeconfig-switch-context
+
   log "Cluster criado com sucesso!"
   kubectl get nodes
 }
