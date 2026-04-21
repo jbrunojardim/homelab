@@ -55,6 +55,7 @@ cmd_create() {
 
   log "Configurando kubeconfig local"
   k3d kubeconfig merge "$CLUSTER_NAME" --kubeconfig-switch-context
+  sed -i "s/0\.0\.0\.0/${SERVER_IP}/g" "$HOME/.kube/config"
 
   log "Cluster criado com sucesso!"
   kubectl get nodes
