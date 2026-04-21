@@ -8,8 +8,8 @@ Automação de infraestrutura para laboratório homelab — Kubernetes, serviço
 
 | Máquina | Modelo | SO | Função |
 |---|---|---|---|
-| Servidor | Lenovo ThinkPad T14 | Fedora Server | Nó do cluster k3d |
-| Principal | Samsung Galaxy Book 360 | Fedora 43 / Hyprland | Controle remoto via kubectl |
+| Servidor | Samsung Galaxy Book 360 | Fedora Server | Nó do cluster k3d |
+| Principal | Lenovo ThinkPad T14 | Fedora 43 / Hyprland | Controle remoto via kubectl |
 
 > O servidor foi configurado como headless via [dotstrap/bootstrap/headless.sh](https://github.com/jbrunojardim/dotfile-bootstrap/blob/joseph/bootstrap/headless.sh).
 
