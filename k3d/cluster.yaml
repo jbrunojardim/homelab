@@ -5,6 +5,12 @@ metadata:
 servers: 1
 agents: 2
 ports:
-  - port: 80:80@loadbalancer
-  - port: 443:443@loadbalancer
-  - port: 6443:6443@loadbalancer
+  - port: 80:80
+    nodeFilters:
+      - loadbalancer
+  - port: 443:443
+    nodeFilters:
+      - loadbalancer
+  - port: 6443:6443
+    nodeFilters:
+      - loadbalancer
