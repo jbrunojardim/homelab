@@ -51,11 +51,12 @@ cmd_create() {
   SERVER_IP="$(get_server_ip)"
   log "IP detectado: $SERVER_IP"
   log "Criando cluster '${CLUSTER_NAME}'"
-  k3d cluster create --config "$CONFIG" --k3s-arg "--tls-san=${SERVER_IP}@server:0"
+  k3d cluster create --config "$CONFIG" \
+    --api-port "${SERVER_IP}:6443" \
+    --k3s-arg "--tls-san=${SERVER_IP}@server:0"
 
   log "Configurando kubeconfig local"
   k3d kubeconfig merge "$CLUSTER_NAME" --kubeconfig-switch-context
-  sed -i "s|https://0\.0\.0\.0:[0-9]*|https://${SERVER_IP}:6443|g" "$HOME/.kube/config"
 
   log "Cluster criado com sucesso!"
   kubectl get nodes
