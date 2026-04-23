@@ -1,16 +1,26 @@
+---
 apiVersion: k3d.io/v1alpha5
 kind: Simple
 metadata:
   name: homelab
 servers: 1
 agents: 2
+kubeAPI:
+  host: {{ IPSERVER }}  # IP externo ou domínio para acesso remoto
+  hostIP: {{ IPSERVER }}  # IP externo ou domínio para acesso remoto
+  port: 6443
 ports:
-  - port: 80:80
+  - port: 6443:6443  # Porta da API Server para acesso remoto
+    nodeFilters:
+      - loadbalancer  # Aqui o filtro deve ser loadbalancer
+  - port: 8000:30000  # Porta LoadBalancer configurada
     nodeFilters:
       - loadbalancer
-  - port: 443:443
-    nodeFilters:
-      - loadbalancer
-  - port: 6443:6443
-    nodeFilters:
-      - loadbalancer
+options:
+  k3s:
+    extraArgs:
+      - arg: "--tls-san={{ IPSERVER }}"  # IP externo ou domínio para acesso remoto
+        nodeFilters:
+          - server:0  # Especifica o primeiro nó server
+
+...
