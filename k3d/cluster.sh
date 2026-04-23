@@ -50,8 +50,12 @@ cmd_create() {
 
   SERVER_IP="$(get_server_ip)"
   log "IP detectado: $SERVER_IP"
+
+  log "Substituindo variáveis de configuração"
+  sed -i "s|{{ IPSERVER }}|${SERVER_IP}|g" "$CONFIG"
+
   log "Criando cluster '${CLUSTER_NAME}'"
-  k3d cluster create --config "$CONFIG" 
+  k3d cluster create --config "$CONFIG"
 
   log "Configurando kubeconfig local"
   k3d kubeconfig merge "$CLUSTER_NAME" --kubeconfig-switch-context
