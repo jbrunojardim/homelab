@@ -17,7 +17,7 @@ log() {
 get_server_ip() {
   local iface ip
   # tenta cabeada primeiro (en*, eth*), depois WiFi (wl*)
-  iface=$(ip -o link show up | awk '$0 ~ /state UP/ && $2 ~ /^(e[nt]|wl|eth)/ {gsub(/:$/, "", $2); print $2; exit}')
+  iface=$(ip -o link show up | awk '$0 ~ /state UP/ && $2 ~ /^(e[nt]|wl)/ {gsub(/:$/, "", $2); print $2; exit}')
   ip=$(ip -o -4 addr show dev "$iface" 2>/dev/null | awk '{print $4}' | cut -d/ -f1)
   if [[ -z "$ip" ]]; then
     echo "[ERRO] Não foi possível detectar o IP de nenhuma interface de rede." >&2
@@ -55,7 +55,7 @@ cmd_create() {
   sed -i "s|{{ IPSERVER }}|${SERVER_IP}|g" "$CONFIG"
 
   log "Criando cluster '${CLUSTER_NAME}'"
-  k3d cluster create --config "$CONFIG"
+  k3d cluster create --config "$CONFIG" 
 
   log "Configurando kubeconfig local"
   k3d kubeconfig merge "$CLUSTER_NAME" --kubeconfig-switch-context
