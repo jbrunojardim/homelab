@@ -64,7 +64,7 @@ O script cria `~gitlab-runner/.kube/config` com o kubeconfig do cluster e ajusta
 ### Etapa 3 — Configurar kubectl
 
 ```bash
-curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/scripts/kubeconfig.sh | bash -s joseph@192.168.68.60
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/scripts/kubeconfig.sh | bash -s joseph@192.168.68.61
 ```
 
 O script:
@@ -73,6 +73,26 @@ O script:
 - Mescla em `~/.kube/config`
 - Define `k3d-homelab` como contexto ativo
 - Valida com `kubectl get nodes`
+
+---
+
+## Deploy de aplicações
+
+### nginx (ingress-nginx)
+
+```bash
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/nginx.sh | bash -s deploy
+```
+
+Aplica namespace `ingress-nginx`, Deployment (3 réplicas) e Service LoadBalancer. O nginx responde na porta `8000` do servidor.
+
+```bash
+# status
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/nginx.sh | bash -s status
+
+# remover
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/k3d/nginx.sh | bash -s delete
+```
 
 ---
 
@@ -94,7 +114,13 @@ homelab/
 │   └── install_k3d.sh    # Docker + k3d + kubectl no Fedora Server
 ├── k3d/
 │   ├── cluster.sh        # create / delete / status / kubeconfig
-│   └── cluster.yaml      # configuração declarativa do cluster k3d
+│   ├── cluster.yaml      # configuração declarativa do cluster k3d
+│   ├── nginx.sh          # deploy / delete / status do nginx
+│   └── manifests/
+│       └── nginx/
+│           ├── namespace.yaml
+│           ├── deployment.yaml
+│           └── service.yaml
 └── scripts/
     ├── kubeconfig.sh                      # configura kubectl no desktop via SSH
     └── gitlab-runner-shell-permissions.sh # kubeconfig para gitlab-runner shell executor (opcional)
@@ -109,7 +135,7 @@ homelab/
 ├── tools/         # ← implementado
 ├── k3d/           # ← implementado
 ├── scripts/       # ← implementado
-├── manifests/     # yamls de aplicações
+├── manifests/     # ← implementado (nginx)
 ├── helm/          # charts e values
 └── terraform/     # infra-as-code
 ```
