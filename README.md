@@ -47,6 +47,16 @@ Cria um cluster `homelab` com **1 server + 2 agents**, conforme `k3d/cluster.yam
 | TLS-SAN | IP da interface cabeada (detectado automaticamente) |
 | Traefik | habilitado (ingress controller padrão) |
 
+### (Opcional) — Permissões para gitlab-runner
+
+Se o servidor tiver um gitlab-runner configurado com executor `shell`, execute no servidor para dar acesso ao kubeconfig:
+
+```bash
+curl -fsSL -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/jbrunojardim/homelab/refs/heads/joseph/scripts/gitlab-runner-shell-permissions.sh | bash
+```
+
+O script cria `~gitlab-runner/.kube/config` com o kubeconfig do cluster e ajusta as permissões de ownership.
+
 ---
 
 ## Desktop (ThinkPad T14)
@@ -86,7 +96,8 @@ homelab/
 │   ├── cluster.sh        # create / delete / status / kubeconfig
 │   └── cluster.yaml      # configuração declarativa do cluster k3d
 └── scripts/
-    └── kubeconfig.sh     # configura kubectl no desktop via SSH
+    ├── kubeconfig.sh                      # configura kubectl no desktop via SSH
+    └── gitlab-runner-shell-permissions.sh # kubeconfig para gitlab-runner shell executor (opcional)
 ```
 
 ---
